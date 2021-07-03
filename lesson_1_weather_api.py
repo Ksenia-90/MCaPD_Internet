@@ -5,13 +5,27 @@ import pytemperature
 import requests
 from dotenv import dotenv_values
 
-config = dotenv_values('.env')
 
-city_name = input("Введите название города, например Novosibirsk:")
-appid = config.get('appid')
+def get_json_response(city_name, app_id):
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={app_id}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
 
-url = f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={appid}'
-response = requests.get(url)
-data = response.json()
 
-print(f"В городе {data['name']} {round(pytemperature.k2c(data['main']['temp']), 2)} градусов по Цельсию")
+def get_temperature_from_json(json):
+    return round(pytemperature.k2c(json['main']['temp']), 2)
+
+
+def main():
+    city_name = input("Введите название города, например Novosibirsk:")
+    config = dotenv_values('.env')
+    temperature = get_temperature_from_json(get_json_response(city_name, config.get('app_id')))
+    print(f"В городе {city_name} {temperature} градусов")
+
+
+if __name__ == "__main__":
+    main()
+

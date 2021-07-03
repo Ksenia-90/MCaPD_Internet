@@ -2,15 +2,33 @@
 # (input), сохранить JSON-вывод в файле *.json; написать функцию, возвращающую список репозиториев
 
 from pprint import pprint
-
 import requests
 
-username = input("Введите login:")
 
-response = requests.get(f'https://api.github.com/users/{username}/repos')
+def get_response(user_name):
+    response = requests.get(f'https://api.github.com/users/{user_name}/repos')
+    if response.status_code == 200:
+        return response
+    else:
+        return None
 
-with open(f'{username}.json', "wb") as f:
-    f.write(response.content)
 
-for repo in response.json():
-    pprint(repo['html_url'])
+def save_json_to_file(file_name, content):
+    with open(f'{file_name}.json', "wb") as f:
+        f.write(content)
+
+
+def print_user_repos(json):
+    for repo in json:
+        pprint(repo['html_url'])
+
+
+def main():
+    user_name = input("Введите login:")
+    response = get_response(user_name)
+    save_json_to_file(user_name, response.content)
+    print_user_repos(response.json())
+
+
+if __name__ == "__main__":
+    main()
