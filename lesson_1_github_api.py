@@ -23,11 +23,18 @@ def print_user_repos(json):
         pprint(repo['html_url'])
 
 
+def get_repos_by_attr(json, attr='html_url'):
+    return list(map(lambda repo: repo[attr], json))
+
+
 def main():
     user_name = input("Введите login:")
     response = get_response(user_name)
     save_json_to_file(user_name, response.content)
-    print_user_repos(response.json())
+    # print url repos
+    pprint(get_repos_by_attr(response.json()))
+    # print name repos
+    pprint(get_repos_by_attr(response.json(), 'name'))
 
 
 if __name__ == "__main__":
