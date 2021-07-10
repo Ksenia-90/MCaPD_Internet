@@ -46,6 +46,7 @@ class SJScrapper:
     def build_vacancy(dict_included, vacancy_json):
         vacancy = {}
         try:
+            vacancy['id'] = vacancy_json['id']
             vacancy_main_info_id = vacancy_json['relationships']['mainInfo']['data']['id']
             vacancy_main_info_attr = dict_included['vacancyMainInfo'][vacancy_main_info_id]['attributes']
             vacancy['vacancy_name'] = vacancy_main_info_attr['profession']
@@ -92,7 +93,7 @@ class SJScrapper:
 
 
 if __name__ == '__main__':
-    sj_scrapper = SJScrapper(10, 1)
+    sj_scrapper = SJScrapper(1, 1)
     res = sj_scrapper.run('экономист')
     pprint(f'Кол-во вакансий: {len(res)}')
     pprint(res)

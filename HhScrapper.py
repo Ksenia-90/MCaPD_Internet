@@ -49,6 +49,10 @@ class HhScrapper:
         vacancy_df['vacancy_name'] = vacancy.get_text()
         vacancy_df['vacancy_url'] = vacancy['href'].split('?')[0]
 
+        # vacancy_id
+        tmp = vacancy_df.get('vacancy_url').split("/")
+        vacancy_df['id'] = tmp[len(tmp) - 1]
+
         # city
         city = item.find('span', {'class': 'vacancy-serp-item__meta-info'}).getText().split(', ')[0]
         vacancy_df['city'] = city
